@@ -1,5 +1,8 @@
 package br.ifsp.virtual_studies.model;
 
-public class Student extends User {
+import jakarta.persistence.Entity;
+
+@Entity
+public class Student extends Usuario {
     
 }

@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @RequiredArgsConstructor
 @Entity
 @Service
@@ -23,6 +22,8 @@ public class Message {
     @NotBlank
     private String text;
 
-    @NotBlank
-    private User user;
+    // @NotBlank
+    // @ManyToOne
+    // @JoinColumn(name = "id_message")
+    // private Usuario Usuario;
 }

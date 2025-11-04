@@ -10,11 +10,10 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @RequiredArgsConstructor
 @Entity
 @Service
-public class User {
+public class Usuario {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
