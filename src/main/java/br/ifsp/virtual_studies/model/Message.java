@@ -1,29 +1,34 @@
 package br.ifsp.virtual_studies.model;
 
-import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Entity
-@Service
 public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank
-    private String text;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "chat_id")
+    private Chat chat;
 
-    // @NotBlank
-    // @ManyToOne
-    // @JoinColumn(name = "id_message")
-    // private Usuario Usuario;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Usuario author;
+
+    @NotBlank
+    @Size(max=1000)
+    private String text;
+    
+    private LocalDateTime createdAt;
 }

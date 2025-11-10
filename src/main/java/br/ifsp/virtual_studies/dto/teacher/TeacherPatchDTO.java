@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TeacherTaskPatchDTO {
+public class TeacherPatchDTO {
 
     Optional<String> name = Optional.empty();
     Optional<String> email = Optional.empty();

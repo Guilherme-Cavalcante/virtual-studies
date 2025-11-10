@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import br.ifsp.virtual_studies.dto.page.PagedResponse;
 import br.ifsp.virtual_studies.dto.student.StudentRequestDTO;
@@ -12,8 +13,10 @@ import br.ifsp.virtual_studies.exceptions.ResourceNotFoundException;
 import br.ifsp.virtual_studies.mapper.PagedResponseMapper;
 import br.ifsp.virtual_studies.model.Student;
 import br.ifsp.virtual_studies.repository.StudentRepository;
+import jakarta.validation.Valid;
 
 @Service
+@Validated
 public class StudentService {
     private final StudentRepository studentRepository;
     private final ModelMapper modelMapper;
@@ -25,7 +28,7 @@ public class StudentService {
         this.pagedResponseMapper = pagedResponseMapper;
     }
     
-    public StudentResponseDTO createStudent(StudentRequestDTO studentDto) {
+    public StudentResponseDTO createStudent(@Valid StudentRequestDTO studentDto) {
         Student student = modelMapper.map(studentDto, Student.class);
         Student createdStudent = studentRepository.save(student);
         return modelMapper.map(createdStudent, StudentResponseDTO.class);

@@ -1,19 +1,17 @@
 package br.ifsp.virtual_studies.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-import jakarta.persistence.CascadeType;
+import org.springframework.stereotype.Service;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.Email;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -22,28 +20,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Usuario {
+@Service
+public class Thanks {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotBlank
-    @Size(min = 2, max = 100)
-    private String name;
-
-    @NotBlank
-    @Email
     @Column(unique = true)
-    private String email;
+    private Message message;
 
     @NotBlank
-    @Size(min = 8)
-    private String password;
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    private List<Message> messages = new ArrayList<>();
+    @Column(unique = true)
+    private Student student;
 
     private LocalDateTime createdAt;
 }

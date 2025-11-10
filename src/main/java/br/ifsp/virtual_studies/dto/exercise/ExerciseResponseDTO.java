@@ -1,17 +1,17 @@
-package br.ifsp.virtual_studies.dto.message;
+package br.ifsp.virtual_studies.dto.exercise;
 
 import java.time.LocalDateTime;
 
 import br.ifsp.virtual_studies.model.Chat;
-import br.ifsp.virtual_studies.model.Usuario;
 import lombok.Data;
 
 @Data
-public class MessageResponseDTO {
-
+public class ExerciseResponseDTO {
+    
     private Long id;
+    private String title;
+    private String description;
     private Chat chat;
-    private Usuario author;
-    private String text;
+    private String link;
     private LocalDateTime createdAt;
 }

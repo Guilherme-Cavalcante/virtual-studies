@@ -1,5 +1,7 @@
 package br.ifsp.virtual_studies.dto.teacher;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 
 @Data
@@ -9,4 +11,5 @@ public class TeacherResponseDTO {
     private String name;
     private String email;
     private String password;
+    private LocalDateTime creadtedAt;
 }
