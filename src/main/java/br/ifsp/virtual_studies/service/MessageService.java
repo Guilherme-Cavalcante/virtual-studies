@@ -46,10 +46,7 @@ public class MessageService {
         message.setText(messageDto.getText());
         message.setCreatedAt(LocalDateTime.now());
         Message createdMessage = messageRepository.save(message);
-        MessageResponseDTO response = modelMapper.map(createdMessage, MessageResponseDTO.class);
-        response.setAuthorId(createdMessage.getAuthor().getId());
-        response.setChatId(createdMessage.getChat().getId());
-        return response;
+        return modelMapper.map(createdMessage, MessageResponseDTO.class);
     }
     
     public PagedResponse<MessageResponseDTO> getAllMessages(Pageable pageable) {

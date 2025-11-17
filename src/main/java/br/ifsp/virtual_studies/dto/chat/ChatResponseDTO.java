@@ -1,7 +1,7 @@
 package br.ifsp.virtual_studies.dto.chat;
 
+import java.util.List;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 import br.ifsp.virtual_studies.model.Student;
 import br.ifsp.virtual_studies.model.Teacher;
@@ -12,7 +12,7 @@ public class ChatResponseDTO {
     
     private Long id;
     private String subject;
-    private Teacher teacher;
-    private Set<Student> studentsList;
+    private Long teacherId;
+    private List<Long> studentsIds;
     private LocalDateTime createdAt;
 }

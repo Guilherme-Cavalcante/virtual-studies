@@ -10,7 +10,7 @@ import lombok.Data;
 public class ThanksResponseDTO {
 
     private Long id;
-    private Message message;
-    private Student student;
+    private Long messageId;
+    private Long studentId;
     private LocalDateTime createdAt;
 }

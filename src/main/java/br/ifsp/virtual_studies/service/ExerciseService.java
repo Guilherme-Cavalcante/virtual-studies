@@ -13,7 +13,9 @@ import br.ifsp.virtual_studies.dto.exercise.ExerciseRequestDTO;
 import br.ifsp.virtual_studies.dto.exercise.ExerciseResponseDTO;
 import br.ifsp.virtual_studies.exceptions.ResourceNotFoundException;
 import br.ifsp.virtual_studies.mapper.PagedResponseMapper;
+import br.ifsp.virtual_studies.model.Chat;
 import br.ifsp.virtual_studies.model.Exercise;
+import br.ifsp.virtual_studies.repository.ChatRepository;
 import br.ifsp.virtual_studies.repository.ExerciseRepository;
 import jakarta.validation.Valid;
 
@@ -21,17 +23,25 @@ import jakarta.validation.Valid;
 // @Validated
 public class ExerciseService {
     private final ExerciseRepository exerciseRepository;
+    private final ChatRepository chatRepository;
     private final ModelMapper modelMapper;
     private final PagedResponseMapper pagedResponseMapper;
     
-    public ExerciseService(ExerciseRepository exerciseRepository, ModelMapper modelMapper, PagedResponseMapper pagedResponseMapper) {
+    public ExerciseService(ExerciseRepository exerciseRepository, ChatRepository chatRepository, ModelMapper modelMapper, PagedResponseMapper pagedResponseMapper) {
         this.exerciseRepository = exerciseRepository;
+        this.chatRepository = chatRepository;
         this.modelMapper = modelMapper;
         this.pagedResponseMapper = pagedResponseMapper;
     }
     
     public ExerciseResponseDTO createExercise(ExerciseRequestDTO exerciseDto) {
-        Exercise exercise = modelMapper.map(exerciseDto, Exercise.class);
+        Chat chat = chatRepository.findById(exerciseDto.getChatId())
+                .orElseThrow(() -> new ResourceNotFoundException("Chat not found"));
+        Exercise exercise = new Exercise();
+        exercise.setTitle(exerciseDto.getTitle());
+        exercise.setDescription(exerciseDto.getDescription());
+        exercise.setLink(exerciseDto.getLink());
+        exercise.setChat(chat);
         exercise.setCreatedAt(LocalDateTime.now());
         Exercise createdExercise = exerciseRepository.save(exercise);
         return modelMapper.map(createdExercise, ExerciseResponseDTO.class);
@@ -43,7 +53,8 @@ public class ExerciseService {
     }
     
     public ExerciseResponseDTO getExerciseById(Long id) {
-        Exercise exercise = exerciseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));
+        Exercise exercise = exerciseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));
         return modelMapper.map(exercise, ExerciseResponseDTO.class);
     }
     

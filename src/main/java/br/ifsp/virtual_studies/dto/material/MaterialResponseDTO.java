@@ -11,7 +11,7 @@ public class MaterialResponseDTO {
     private Long id;
     private String title;
     private String description;
-    private Chat chat;
+    private Long chatId;
     private String local;
     private LocalDateTime createdAt;
 }

@@ -14,7 +14,7 @@ public class ExerciseRequestDTO {
     private String description;
 
     @NotNull(message = "Campo 'text' não pode ser nulo")
-    private Chat chat;
+    private Long chatId;
     
     @NotNull(message = "Campo 'link' não pode ser nulo")
     private String link;

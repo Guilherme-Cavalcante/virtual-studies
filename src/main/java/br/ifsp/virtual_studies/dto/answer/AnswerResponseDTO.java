@@ -10,8 +10,8 @@ import lombok.Data;
 public class AnswerResponseDTO {
 
     private Long id;
-    private Exercise exercise;
-    private Student student;
+    private Long exerciseId;
+    private Long studentId;
     private Double grade;
     private LocalDateTime createdAt;
 }

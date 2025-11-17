@@ -11,7 +11,7 @@ public class ExerciseResponseDTO {
     private Long id;
     private String title;
     private String description;
-    private Chat chat;
+    private Long chatId;
     private String link;
     private LocalDateTime createdAt;
 }
