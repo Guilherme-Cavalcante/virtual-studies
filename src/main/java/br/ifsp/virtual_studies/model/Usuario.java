@@ -1,11 +1,13 @@
 package br.ifsp.virtual_studies.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,12 +24,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Usuario {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn //(name = "usuario_type")
+public abstract class Usuario implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
     @NotBlank
     @Size(min = 2, max = 100)
@@ -43,7 +46,7 @@ public abstract class Usuario {
     private String password;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    private List<Message> messages = new ArrayList<>();
+    private List<Message> messages;
 
     private LocalDateTime createdAt;
 }

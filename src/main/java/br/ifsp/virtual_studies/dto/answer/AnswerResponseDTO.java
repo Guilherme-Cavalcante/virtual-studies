@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class AnswerResponseDTO {
 
-    private long id;
+    private Long id;
     private Exercise exercise;
     private Student student;
     private Double grade;

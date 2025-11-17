@@ -1,5 +1,6 @@
 package br.ifsp.virtual_studies.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
@@ -19,12 +21,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Service
-public class Meeting {
+public class Meeting implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotBlank
     @Size(min=3, max=120)
@@ -34,8 +35,9 @@ public class Meeting {
     @Size(max=500)
     private String description;
 
-    @NotBlank
+    @NotNull
     @ManyToOne
+    @JoinColumn
     private Chat chat;
 
     private String link;

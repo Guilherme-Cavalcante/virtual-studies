@@ -1,5 +1,6 @@
 package br.ifsp.virtual_studies.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
@@ -24,11 +26,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-public class Chat {
+public class Chat implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotNull
     @Size(min=3, max=120)
@@ -39,11 +41,14 @@ public class Chat {
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     private Teacher teacher;
     
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Student> studentsList = new HashSet<>();
+    @ManyToMany(mappedBy = "chats")
+    private Set<Student> students;
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
-    private List<Message> messages = new ArrayList<>();
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> messages;
+    
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Meeting> meetings;
 
     private LocalDateTime createdAt;
 }

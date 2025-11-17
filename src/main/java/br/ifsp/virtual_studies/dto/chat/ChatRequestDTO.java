@@ -14,9 +14,5 @@ public class ChatRequestDTO {
     private String subject;
 
     @NotNull(message = "Campo 'text' não pode ser nulo")
-    private Teacher teacher;
-
-    @NotNull(message = "Campo 'email' não pode ser nulo")
-    private Set<Student> studentsList;
-
+    private long teacherId;
 }

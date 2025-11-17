@@ -1,5 +1,7 @@
 package br.ifsp.virtual_studies.service;
 
+import java.time.LocalDateTime;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +18,7 @@ import br.ifsp.virtual_studies.repository.StudentRepository;
 import jakarta.validation.Valid;
 
 @Service
-@Validated
+// @Validated
 public class StudentService {
     private final StudentRepository studentRepository;
     private final ModelMapper modelMapper;
@@ -28,8 +30,10 @@ public class StudentService {
         this.pagedResponseMapper = pagedResponseMapper;
     }
     
-    public StudentResponseDTO createStudent(@Valid StudentRequestDTO studentDto) {
+    public StudentResponseDTO createStudent(StudentRequestDTO studentDto) {
         Student student = modelMapper.map(studentDto, Student.class);
+        student.setCreatedAt(LocalDateTime.now());
+        student.setScore(0);
         Student createdStudent = studentRepository.save(student);
         return modelMapper.map(createdStudent, StudentResponseDTO.class);
     }

@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class ThanksResponseDTO {
 
-    private long id;
+    private Long id;
     private Message message;
     private Student student;
     private LocalDateTime createdAt;

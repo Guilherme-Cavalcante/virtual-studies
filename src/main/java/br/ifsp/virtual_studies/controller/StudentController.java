@@ -3,6 +3,7 @@ package br.ifsp.virtual_studies.controller;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,6 +21,7 @@ import br.ifsp.virtual_studies.dto.page.PagedResponse;
 import br.ifsp.virtual_studies.service.StudentService;
 import jakarta.validation.Valid;
 
+// @Validated
 @RestController
 @RequestMapping("/api/students")
 public class StudentController {

@@ -1,5 +1,6 @@
 package br.ifsp.virtual_studies.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
@@ -20,19 +22,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Service
-public class Answer {
+public class Answer implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @NotBlank
+    @NotNull
     @ManyToOne
+    @JoinColumn(name = "answer_id", referencedColumnName = "id")
     private Exercise exercise;
 
-    @NotBlank
+    @NotNull
     @ManyToOne
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student student;
 
     @PositiveOrZero

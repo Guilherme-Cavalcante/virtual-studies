@@ -1,5 +1,6 @@
 package br.ifsp.virtual_studies.exceptions;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import jakarta.servlet.ServletException;
 import jakarta.validation.ConstraintViolationException;
@@ -70,6 +72,22 @@ public class GlobalExceptionHandler {
         errorResponse.put("error", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Map<String, String>> handleSQLException(DataIntegrityViolationException exception) {
+        Map<String, String> errorResponse = new HashMap<>();
+        String error = "A unique constraint violation occurred.";
+
+        // Example logic to find a specific constraint name (database dependent, parsing required)
+        if (exception.getMostSpecificCause().getMessage().contains("EMAIL NULLS FIRST")) {
+            error = "E-mail já registrado.";
+        }
+        errorResponse.put("error", error);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
                 .body(errorResponse);
     }
 

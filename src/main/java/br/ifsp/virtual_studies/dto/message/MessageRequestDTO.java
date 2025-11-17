@@ -9,10 +9,10 @@ import lombok.Data;
 public class MessageRequestDTO {
 
     @NotNull(message = "Campo 'text' não pode ser nulo")
-    private Chat chat;
+    private long chatId;
 
     @NotNull(message = "Campo 'email' não pode ser nulo")
-    private Usuario author;
+    private long authorId;
 
     @NotNull(message = "Campo 'text' não pode ser nulo")
     private String text;

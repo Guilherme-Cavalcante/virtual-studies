@@ -1,11 +1,11 @@
-package br.ifsp.virtual_studies.dto.teacher;
+package br.ifsp.virtual_studies.dto.usuario;
 
 import java.time.LocalDateTime;
 
 import lombok.Data;
 
 @Data
-public class TeacherResponseDTO {
+public class UsuarioResponseDTO {
 
     private Long id;
     private String name;
@@ -13,3 +13,4 @@ public class TeacherResponseDTO {
     private String password;
     private LocalDateTime createdAt;
 }
+

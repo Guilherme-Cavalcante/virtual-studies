@@ -1,5 +1,7 @@
 package br.ifsp.virtual_studies.service;
 
+import java.time.LocalDateTime;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,7 @@ public class TeacherService {
     
     public TeacherResponseDTO createTeacher(TeacherRequestDTO teacherDto) {
         Teacher teacher = modelMapper.map(teacherDto, Teacher.class);
+        teacher.setCreatedAt(LocalDateTime.now());
         Teacher createdTeacher = teacherRepository.save(teacher);
         return modelMapper.map(createdTeacher, TeacherResponseDTO.class);
     }
