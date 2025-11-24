@@ -10,6 +10,5 @@ public class ExercisePatchDTO {
     
     Optional<String> title = Optional.empty();
     Optional<String> description = Optional.empty();
-    Optional<Chat> chat = Optional.empty();
     Optional<String> link = Optional.empty();
 }

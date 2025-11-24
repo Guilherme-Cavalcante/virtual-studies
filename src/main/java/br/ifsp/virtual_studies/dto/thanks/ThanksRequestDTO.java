@@ -11,5 +11,5 @@ public class ThanksRequestDTO {
     private String message;
 
     @NotNull(message = "Campo 'student' não pode ser nulo")
-    private Student student;
+    private Long studentId;
 }

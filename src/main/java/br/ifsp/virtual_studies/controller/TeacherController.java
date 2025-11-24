@@ -29,11 +29,11 @@ public class TeacherController {
         this.teacherService = teacherService;
     }
     
-    @PostMapping
-    public ResponseEntity<TeacherResponseDTO> createTeacher(@Valid @RequestBody TeacherRequestDTO teacher) {
-        TeacherResponseDTO teacherResponseDTO = teacherService.createTeacher(teacher);
-        return ResponseEntity.status(HttpStatus.CREATED).body(teacherResponseDTO);
-    }
+    // @PostMapping
+    // public ResponseEntity<TeacherResponseDTO> createTeacher(@Valid @RequestBody TeacherRequestDTO teacher) {
+    //     TeacherResponseDTO teacherResponseDTO = teacherService.createTeacher(teacher);
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(teacherResponseDTO);
+    // }
     
     @GetMapping
     public ResponseEntity<PagedResponse<TeacherResponseDTO>> getAllTeachers(Pageable pageable) {

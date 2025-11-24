@@ -1,6 +1,7 @@
 package br.ifsp.virtual_studies.dto.message;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import br.ifsp.virtual_studies.dto.usuario.UsuarioResponseDTO;
 import br.ifsp.virtual_studies.model.Chat;
@@ -14,5 +15,6 @@ public class MessageResponseDTO {
     private Long chatId;
     private Long authorId;
     private String text;
+    private List<Long> thanksIds;
     private LocalDateTime createdAt;
 }

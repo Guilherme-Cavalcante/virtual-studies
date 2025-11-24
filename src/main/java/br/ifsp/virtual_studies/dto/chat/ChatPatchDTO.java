@@ -11,6 +11,4 @@ import lombok.Data;
 public class ChatPatchDTO {
     
     Optional<String> subject = Optional.empty();
-    Optional<Teacher> teacher = Optional.empty();
-    Optional<Set<Student>> studentsList = Optional.empty();
 }

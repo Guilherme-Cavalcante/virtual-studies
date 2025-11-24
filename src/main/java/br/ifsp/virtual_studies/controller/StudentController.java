@@ -31,11 +31,11 @@ public class StudentController {
         this.studentService = studentService;
     }
     
-    @PostMapping
-    public ResponseEntity<StudentResponseDTO> createStudent(@Valid @RequestBody StudentRequestDTO student) {
-        StudentResponseDTO studentResponseDTO = studentService.createStudent(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body(studentResponseDTO);
-    }
+    // @PostMapping
+    // public ResponseEntity<StudentResponseDTO> createStudent(@Valid @RequestBody StudentRequestDTO student) {
+    //     StudentResponseDTO studentResponseDTO = studentService.createStudent(student);
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(studentResponseDTO);
+    // }
     
     @GetMapping
     public ResponseEntity<PagedResponse<StudentResponseDTO>> getAllStudents(Pageable pageable) {

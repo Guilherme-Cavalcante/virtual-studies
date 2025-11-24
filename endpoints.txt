@@ -1,0 +1,36 @@
+POST localhost:8080/api/users/register
+{
+    "name": "arnaldo",
+    "email": "arnaldo@gmail.com",
+    "password": "Arnaldo1234.",
+    "teacher": true
+}
+
+{
+    "name": "alberto",
+    "email": "alberto@gmail.com",
+    "password": "Alberto1234."
+    // "teacher": false
+}
+
+POST localhost:8080/api/auth/authenticate
+{
+    "username": "arnaldo",
+    "password": "Arnaldo1234"
+}   
+
+//usar a chave 'Authentication: Bearer <token gerado pelo authenticate>' no header dos endpoints restantes
+
+POST localhost:8080/api/chats
+{
+    "subject": "Geografia"
+}
+
+GET localhost:8080/api/chats
+
+POST localhost:8080/api/chats/1/messages
+{
+    "text": "a"
+}
+
+GET localhost:8080/api/chats/1/messages

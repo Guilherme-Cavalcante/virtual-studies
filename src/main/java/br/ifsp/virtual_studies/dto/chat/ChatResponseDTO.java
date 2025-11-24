@@ -14,5 +14,6 @@ public class ChatResponseDTO {
     private String subject;
     private Long teacherId;
     private List<Long> studentsIds;
+    private List<Long> messagesIds;
     private LocalDateTime createdAt;
 }

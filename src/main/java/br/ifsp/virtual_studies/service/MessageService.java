@@ -5,15 +5,19 @@ import java.time.LocalDateTime;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import br.ifsp.virtual_studies.dto.page.PagedResponse;
+import br.ifsp.virtual_studies.dto.thanks.ThanksRequestDTO;
+import br.ifsp.virtual_studies.dto.thanks.ThanksResponseDTO;
 import br.ifsp.virtual_studies.dto.message.MessageRequestDTO;
 import br.ifsp.virtual_studies.dto.message.MessageResponseDTO;
 import br.ifsp.virtual_studies.exceptions.ResourceNotFoundException;
 import br.ifsp.virtual_studies.mapper.PagedResponseMapper;
 import br.ifsp.virtual_studies.model.Chat;
 import br.ifsp.virtual_studies.model.Message;
+import br.ifsp.virtual_studies.model.Thanks;
 import br.ifsp.virtual_studies.model.Usuario;
 import br.ifsp.virtual_studies.repository.ChatRepository;
 import br.ifsp.virtual_studies.repository.MessageRepository;
@@ -35,35 +39,40 @@ public class MessageService {
         this.pagedResponseMapper = pagedResponseMapper;
     }
     
-    public MessageResponseDTO createMessage(MessageRequestDTO messageDto) {
-        Chat chat = chatRepository.findById(messageDto.getChatId())
-                .orElseThrow(() -> new ResourceNotFoundException("Chat not found"));
-        Usuario author = usuarioRepository.findById(messageDto.getAuthorId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        Message message = new Message();
-        message.setChat(chat);
-        message.setAuthor(author);
-        message.setText(messageDto.getText());
-        message.setCreatedAt(LocalDateTime.now());
-        Message createdMessage = messageRepository.save(message);
-        return modelMapper.map(createdMessage, MessageResponseDTO.class);
-    }
+    // public MessageResponseDTO createMessage(MessageRequestDTO messageDto) {
+    //     Chat chat = chatRepository.findById(messageDto.getChatId())
+    //             .orElseThrow(() -> new ResourceNotFoundException("Chat not found"));
+    //     Usuario author = usuarioRepository.findById(messageDto.getAuthorId())
+    //             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    //     Message message = new Message();
+    //     message.setChat(chat);
+    //     message.setAuthor(author);
+    //     message.setText(messageDto.getText());
+    //     message.setCreatedAt(LocalDateTime.now());
+    //     Message createdMessage = messageRepository.save(message);
+    //     return modelMapper.map(createdMessage, MessageResponseDTO.class);
+    // }
     
-    public PagedResponse<MessageResponseDTO> getAllMessages(Pageable pageable) {
-        Page<Message> messagesPage = messageRepository.findAll(pageable);
-        return pagedResponseMapper.toPagedResponse(messagesPage, MessageResponseDTO.class);
-    }
+    // public PagedResponse<MessageResponseDTO> getAllMessages(Pageable pageable) {
+    //     Page<Message> messagesPage = messageRepository.findAll(pageable);
+    //     return pagedResponseMapper.toPagedResponse(messagesPage, MessageResponseDTO.class);
+    // }
     
-    public MessageResponseDTO getMessageById(Long id) {
-        Message message = messageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Message not found"));
+    public MessageResponseDTO getMessageById(Long id, Usuario usuario) {
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Message not found"));
+        if (!usuario.equals(message.getAuthor())) {
+            throw new AccessDeniedException("Access Denied");
+        }
         return modelMapper.map(message, MessageResponseDTO.class);
     }
     
-    public MessageResponseDTO updateMessage(Long id, MessageRequestDTO messageDto) {
-        
+    public MessageResponseDTO updateMessage(Long id, MessageRequestDTO messageDto, Usuario usuario) {
         Message existingMessage = messageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Message not found with ID: " + id));
-        
+        if (!usuario.equals(existingMessage.getAuthor())) {
+            throw new AccessDeniedException("Access Denied");
+        }
         modelMapper.map(messageDto, existingMessage);
         existingMessage.setId(id);
         Message updatedMessage = messageRepository.save(existingMessage);

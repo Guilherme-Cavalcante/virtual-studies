@@ -23,17 +23,18 @@ import lombok.ToString;
 @Entity
 public class Student extends Usuario {
 
-    private int score;
+    private double score;
+    private final Role role = Role.STUDENT;
 
     @ManyToMany
     @JoinTable
-    private List<Chat> chats;
+    private List<Chat> chats = new ArrayList<>();
 
     public Student() {
         super();
     }
 
-    public void updateScore(int value) {
+    public void updateScore(double value) {
         this.score += value;
     }
 }

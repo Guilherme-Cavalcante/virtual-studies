@@ -2,8 +2,12 @@ package br.ifsp.virtual_studies.model;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class UsuarioAuthenticated implements UserDetails {
 
@@ -19,9 +23,18 @@ public class UsuarioAuthenticated implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return usuario.getRoles().stream()
-                .map(role -> (GrantedAuthority) () -> role.getRoleName().name())
+        List<GrantedAuthority> aroles = new ArrayList<>();
+        List<Role> roles = new ArrayList<>();
+        roles.add(usuario.getRole());
+        roles.add(Role.STUDENT);
+        aroles = roles.stream()
+                .map(role -> (GrantedAuthority) () -> role.toString())
                 .toList();
+        Set<GrantedAuthority> setroles = new HashSet<>();
+        for (GrantedAuthority a : aroles) {
+            setroles.add(a);
+        }
+        return setroles;
     }
 
     @Override

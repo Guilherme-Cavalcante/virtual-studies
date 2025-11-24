@@ -12,9 +12,6 @@ public class MaterialRequestDTO {
     
     @NotNull(message = "Campo 'description' não pode ser nulo")
     private String description;
-
-    @NotNull(message = "Campo 'text' não pode ser nulo")
-    private Chat chat;
     
     @NotNull(message = "Campo 'local' não pode ser nulo")
     private String local;

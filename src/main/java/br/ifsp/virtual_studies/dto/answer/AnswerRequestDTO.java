@@ -9,10 +9,10 @@ import lombok.Data;
 public class AnswerRequestDTO {
 
     @NotNull
-    private Exercise exercise;
+    private Long exerciseId;
 
     @NotNull
-    private Student student;
+    private Long studentId;
 
     @NotNull
     private Double grade;

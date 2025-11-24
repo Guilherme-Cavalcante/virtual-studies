@@ -14,9 +14,6 @@ public class MeetingRequestDTO {
     
     @NotNull(message = "Campo 'description' não pode ser nulo")
     private String description;
-
-    @NotNull(message = "Campo 'chat' não pode ser nulo")
-    private Chat chat;
     
     @NotNull(message = "Campo 'link' não pode ser nulo")
     private String link;

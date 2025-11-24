@@ -41,25 +41,25 @@ public class StudentServiceTest {
     @InjectMocks
     private StudentService studentService;
 
-    @Test
-    void shouldCreateStudent() {
-        StudentRequestDTO dto = new StudentRequestDTO();
-        dto.setName("John Doe");
-        dto.setEmail("john.doe@hotmail.com");
-        dto.setPassword("John1234.");
+    // @Test
+    // void shouldCreateStudent() {
+    //     StudentRequestDTO dto = new StudentRequestDTO();
+    //     dto.setName("John Doe");
+    //     dto.setEmail("john.doe@hotmail.com");
+    //     dto.setPassword("John1234.");
 
-        Student studentEntity = new Student();
-        Student savedStudent = new Student();
-        savedStudent.setId(1L);
-        savedStudent.setName("John Doe");
+    //     Student studentEntity = new Student();
+    //     Student savedStudent = new Student();
+    //     savedStudent.setId(1L);
+    //     savedStudent.setName("John Doe");
 
-        when(modelMapper.map(dto, Student.class)).thenReturn(studentEntity);
-        when(studentRepository.save(any())).thenReturn(savedStudent);
-        when(modelMapper.map(savedStudent, StudentResponseDTO.class)).thenReturn(new StudentResponseDTO());
+    //     when(modelMapper.map(dto, Student.class)).thenReturn(studentEntity);
+    //     when(studentRepository.save(any())).thenReturn(savedStudent);
+    //     when(modelMapper.map(savedStudent, StudentResponseDTO.class)).thenReturn(new StudentResponseDTO());
 
-        StudentResponseDTO response = studentService.createStudent(dto);
-        assertNotNull(response);
-    }
+    //     StudentResponseDTO response = studentService.createStudent(dto);
+    //     assertNotNull(response);
+    // }
 
     @Test
     void shouldFetchStudent() {

@@ -48,7 +48,16 @@ public class Exercise implements Serializable {
     private String link;
 
     @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Answer> answer;
+    private List<Answer> answers = new ArrayList<>();;
 
     private LocalDateTime createdAt;
+
+    public boolean hasStudentAlreadyAnswered(Student student) {
+        for (Answer answer : this.answers) {
+            if (student.equals(answer.getStudent())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

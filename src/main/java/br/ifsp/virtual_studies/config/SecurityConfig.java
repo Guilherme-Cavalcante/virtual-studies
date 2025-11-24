@@ -21,15 +21,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import org.springframework.core.io.Resource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${jwt.public.key}")
-    private RSAPublicKey key;
-    @Value("${jwt.private.key}")
-    private RSAPrivateKey priv;
+    @Value("classpath:keys/public.pem")
+    private Resource publicKeyResource;
+
+    @Value("classpath:keys/private.pem")
+    private Resource privateKeyResource;
 
     @Bean
     public CustomJwtAuthenticationConverter customJwtAuthenticationConverter() {
@@ -54,14 +56,32 @@ public class SecurityConfig {
     }
 
     @Bean
-    JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(this.key).build();
+    JwtDecoder jwtDecoder() throws Exception {
+        String publicKeyContent = new String(publicKeyResource.getInputStream().readAllBytes());
+        RSAPublicKey publicKey = (RSAPublicKey) publicKey(publicKeyResource);
+        return NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
 
     @Bean
-    JwtEncoder jwtEncoder() {
-        var jwk = new RSAKey.Builder(this.key).privateKey(this.priv).build();
+    JwtEncoder jwtEncoder() throws Exception {
+        String publicKeyContent = new String(publicKeyResource.getInputStream().readAllBytes());
+        String privateKeyContent = new String(privateKeyResource.getInputStream().readAllBytes());
+
+        RSAPublicKey publicKey = (RSAPublicKey) publicKey(publicKeyResource);
+        RSAPrivateKey privateKey = (RSAPrivateKey) privateKey(privateKeyResource);
+
+        var jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
         var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
+    }
+
+    @Bean
+    public RSAPublicKey publicKey(@Value("classpath:certs/public.pem") Resource resource) throws Exception {
+        return PemUtils.loadPublicKey(resource.getInputStream());
+    }
+
+    @Bean
+    public RSAPrivateKey privateKey(@Value("classpath:certs/private.pem") Resource resource) throws Exception {
+        return PemUtils.loadPrivateKey(resource.getInputStream());
     }
 }

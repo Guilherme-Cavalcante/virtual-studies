@@ -1,5 +1,9 @@
 package br.ifsp.virtual_studies.config;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +16,7 @@ import br.ifsp.virtual_studies.dto.material.MaterialResponseDTO;
 import br.ifsp.virtual_studies.dto.message.MessageResponseDTO;
 import br.ifsp.virtual_studies.dto.meeting.MeetingResponseDTO;
 import br.ifsp.virtual_studies.dto.thanks.ThanksResponseDTO;
+import br.ifsp.virtual_studies.dto.usuario.UsuarioRegistrationDTO;
 import br.ifsp.virtual_studies.model.*;
 
 @Configuration
@@ -33,9 +38,15 @@ public class MapperConfig {
                 map().setTeacherId(source.getTeacher().getId());
                 if (source.getStudents() != null) {
                     map().setStudentsIds(
-                            source.getStudents().stream()
-                                    .map(Student::getId)
-                                    .toList());
+                        source.getStudents().stream()
+                                .map(Student::getId)
+                                .toList());
+                }
+                if (source.getMessages() != null) {
+                    map().setMessagesIds(
+                        source.getMessages().stream()
+                                .map(Message::getId)
+                                .toList());
                 }
             }
         });
@@ -62,13 +73,37 @@ public class MapperConfig {
             protected void configure() {
                 map().setAuthorId(source.getAuthor().getId());
                 map().setChatId(source.getChat().getId());
+                if (source.getThanks() != null) {
+                    map().setThanksIds(
+                        source.getThanks().stream()
+                                .map(Thanks::getId)
+                                .toList());
+                }
             }
         });
         modelMapper.addMappings(new PropertyMap<Thanks, ThanksResponseDTO>() {
+
             @Override
             protected void configure() {
                 map().setMessageId(source.getMessage().getId());
                 map().setStudentId(source.getStudent().getId());
+            }
+        });
+        modelMapper.addMappings(new PropertyMap<UsuarioRegistrationDTO, Student>() {
+            
+            @Override
+            protected void configure() {
+                map().setScore(0);
+                map().setCreatedAt(LocalDateTime.now());
+                map().setRole(Role.STUDENT);
+            }
+        });
+        modelMapper.addMappings(new PropertyMap<UsuarioRegistrationDTO, Teacher>() {
+            
+            @Override
+            protected void configure() {
+                map().setCreatedAt(LocalDateTime.now());
+                map().setRole(Role.TEACHER);
             }
         });
         return modelMapper;

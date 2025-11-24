@@ -12,7 +12,4 @@ public class ChatRequestDTO {
     
     @NotNull(message = "Campo 'subject' não pode ser nulo")
     private String subject;
-
-    @NotNull(message = "Campo 'text' não pode ser nulo")
-    private Long teacherId;
 }

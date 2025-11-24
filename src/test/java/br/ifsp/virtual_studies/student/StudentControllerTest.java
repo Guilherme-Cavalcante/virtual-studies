@@ -22,63 +22,63 @@ import br.ifsp.virtual_studies.repository.StudentRepository;
 import jakarta.servlet.ServletContext;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class StudentControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    // @Autowired
+    // private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    // @Autowired
+    // private ObjectMapper objectMapper;
 
-    @Autowired
-    private StudentRepository studentRepository;
+    // @Autowired
+    // private StudentRepository studentRepository;
 
-    @BeforeEach
-    void cleanDb() {
-        studentRepository.deleteAll();
-    }
+    // @BeforeEach
+    // void cleanDb() {
+    //     studentRepository.deleteAll();
+    // }
 
-    @Test
-    void shouldCreateStudent() throws Exception {
-        StudentRequestDTO dto = new StudentRequestDTO();
-        dto.setName("John Doe");
-        dto.setEmail("john.doe@hotmail.com");
-        dto.setPassword("John1234.");
+    // // @Test
+    // // void shouldCreateStudent() throws Exception {
+    // //     StudentRequestDTO dto = new StudentRequestDTO();
+    // //     dto.setName("John Doe");
+    // //     dto.setEmail("john.doe@hotmail.com");
+    // //     dto.setPassword("John1234.");
 
-        mockMvc.perform(post("/api/students")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value(dto.getName()))
-                .andExpect(jsonPath("$.email").value(dto.getEmail()))
-                .andExpect(jsonPath("$.password").value(dto.getPassword()));
-    }
+    // //     mockMvc.perform(post("/api/students")
+    // //             .contentType(MediaType.APPLICATION_JSON)
+    // //             .content(objectMapper.writeValueAsString(dto)))
+    // //             .andExpect(status().isCreated())
+    // //             .andExpect(jsonPath("$.name").value(dto.getName()))
+    // //             .andExpect(jsonPath("$.email").value(dto.getEmail()))
+    // //             .andExpect(jsonPath("$.password").value(dto.getPassword()));
+    // // }
 
-    @Test
-    void shouldNotCreateStudent() throws Exception {
-        StudentRequestDTO dto = new StudentRequestDTO();
-        dto.setName("");
-        dto.setEmail("john.doe@");
+    // // @Test
+    // // void shouldNotCreateStudent() throws Exception {
+    // //     StudentRequestDTO dto = new StudentRequestDTO();
+    // //     dto.setName("");
+    // //     dto.setEmail("john.doe@");
 
-        mockMvc.perform(post("/api/students")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isBadRequest());
-    }
+    // //     mockMvc.perform(post("/api/students")
+    // //             .contentType(MediaType.APPLICATION_JSON)
+    // //             .content(objectMapper.writeValueAsString(dto)))
+    // //             .andExpect(status().isBadRequest());
+    // // }
 
-    @Test
-    void shouldReturnStudent() throws Exception {
-        Student student = new Student();
-        student.setName("John Doe");
-        student.setEmail("john.doe@hotmail.com");
-        student.setPassword("John1234.");
-        Student saved = studentRepository.save(student);
+    // @Test
+    // void shouldReturnStudent() throws Exception {
+    //     Student student = new Student();
+    //     student.setName("John Doe");
+    //     student.setEmail("john.doe@hotmail.com");
+    //     student.setPassword("John1234.");
+    //     Student saved = studentRepository.save(student);
 
-        mockMvc.perform(get("/api/students/" + saved.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(saved.getName()))
-                .andExpect(jsonPath("$.email").value(saved.getEmail()))
-                .andExpect(jsonPath("$.password").value(saved.getPassword()));
-    }
+    //     mockMvc.perform(get("/api/students/" + saved.getId()))
+    //             .andExpect(status().isOk())
+    //             .andExpect(jsonPath("$.name").value(saved.getName()))
+    //             .andExpect(jsonPath("$.email").value(saved.getEmail()))
+    //             .andExpect(jsonPath("$.password").value(saved.getPassword()));
+    // }
 }

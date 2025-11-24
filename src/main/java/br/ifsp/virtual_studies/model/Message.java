@@ -2,6 +2,7 @@ package br.ifsp.virtual_studies.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -33,7 +34,34 @@ public class Message implements Serializable {
     private String text;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Thanks> thanks;
+    private List<Thanks> thanks = new ArrayList<>();
     
     private LocalDateTime createdAt;
+
+    public boolean studentAlreadyThanked(Student student) {
+        for (Thanks thanks : this.thanks) {
+            if (student.equals(thanks.getStudent())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addThanks(Thanks thanks) {
+        this.thanks.add(thanks);
+    }
+
+    public void removeThanks(Thanks thanks) {
+        this.thanks.remove(thanks);
+    }
+
+    public Thanks removeThanks(Student student) {
+        for (Thanks thanks : this.thanks) {
+            if (student.equals(thanks.getStudent())) {
+                removeThanks(thanks);
+                return thanks;
+            }
+        }
+        return null;
+    }
 }

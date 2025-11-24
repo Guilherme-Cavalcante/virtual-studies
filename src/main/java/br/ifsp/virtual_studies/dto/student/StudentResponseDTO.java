@@ -10,6 +10,5 @@ public class StudentResponseDTO {
     private Long id;
     private String name;
     private String email;
-    private String password;
     private LocalDateTime createdAt;
 }

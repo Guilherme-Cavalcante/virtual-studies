@@ -3,6 +3,7 @@ package br.ifsp.virtual_studies.service;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import br.ifsp.virtual_studies.exceptions.ResourceNotFoundException;
 import br.ifsp.virtual_studies.model.Usuario;
 import br.ifsp.virtual_studies.repository.UsuarioRepository;
 
@@ -19,7 +20,7 @@ public class AuthenticationService {
     public String authenticate(Authentication authentication) {
         String username = authentication.getName();     
         Usuario user = userRepository.findByName(username)
-            .orElseThrow(() -> new RuntimeException("Usuario not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return jwtService.generateToken(user);
     }
 }
