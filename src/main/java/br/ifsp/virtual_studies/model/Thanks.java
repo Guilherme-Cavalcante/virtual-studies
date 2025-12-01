@@ -37,7 +37,8 @@ public class Thanks implements Serializable {
     private Message message;
 
     @NotNull
-    @Column(unique = true)
+    // @Column(unique = true)
+    @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student student;
 

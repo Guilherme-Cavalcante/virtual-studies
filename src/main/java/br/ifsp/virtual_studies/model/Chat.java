@@ -59,7 +59,12 @@ public class Chat implements Serializable {
     private LocalDateTime createdAt;
     
     public boolean containsStudent(Student student) {
-        return this.students.contains(student);
+        for (Student stu : this.students) {
+            if (stu.getId() == student.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addStudent(Student student) {

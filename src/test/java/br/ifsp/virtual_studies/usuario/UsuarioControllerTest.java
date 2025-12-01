@@ -66,19 +66,4 @@ public class UsuarioControllerTest {
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isBadRequest());
     }
-
-    // @Test
-    // void shouldReturnUsuario() throws Exception {
-    //     Usuario usuario = new Usuario();
-    //     usuario.setName("John Doe");
-    //     usuario.setEmail("john.doe@hotmail.com");
-    //     usuario.setPassword("John1234.");
-    //     Usuario saved = usuarioRepository.save(usuario);
-
-    //     mockMvc.perform(get("/api/usuarios/" + saved.getId()))
-    //             .andExpect(status().isOk())
-    //             .andExpect(jsonPath("$.name").value(saved.getName()))
-    //             .andExpect(jsonPath("$.email").value(saved.getEmail()))
-    //             .andExpect(jsonPath("$.password").value(saved.getPassword()));
-    // }
 }

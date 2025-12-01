@@ -35,7 +35,7 @@ public class Material implements Serializable {
     @Size(max=500)
     private String description;
 
-    @NotBlank
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "chat_id", referencedColumnName = "id")
     private Chat chat;

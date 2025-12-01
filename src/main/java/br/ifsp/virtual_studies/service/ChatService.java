@@ -126,9 +126,13 @@ public class ChatService {
         Student existingStudent = studentRepository.findById(idStudent)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + idStudent));
         if (!chat.containsStudent(existingStudent)) {
-            chat.addStudent(existingStudent);
+            existingStudent.getChats().add(chat);
+            Student newStu = studentRepository.save(existingStudent);
+            chat.addStudent(newStu);
         } else {
-            chat.removeStudent(existingStudent);
+            existingStudent.getChats().remove(chat);
+            Student newStu = studentRepository.save(existingStudent);
+            chat.removeStudent(newStu);
         }
         Chat updatedChat = chatRepository.save(chat);
         return modelMapper.map(updatedChat, ChatResponseDTO.class);
@@ -141,9 +145,9 @@ public class ChatService {
         Usuario author = usuarioRepository.findById(authorId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + authorId));
         Student studentPossibleUser = studentRepository.findById(authorId)
-                .orElse(null);
+                .orElse(new Student());
         Teacher teacherPossibleUser = teacherRepository.findById(authorId)
-                .orElse(null);
+                .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -213,9 +217,9 @@ public class ChatService {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
         Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
+                .orElse(new Student());
         Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -232,10 +236,10 @@ public class ChatService {
     public PagedResponse<MaterialResponseDTO> listMaterials(Long idChat, Usuario usuario, Pageable pageable) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -246,10 +250,10 @@ public class ChatService {
     public MaterialResponseDTO getMaterial(Long idChat, Long idMaterial, Usuario usuario) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -264,10 +268,10 @@ public class ChatService {
     public MaterialResponseDTO updateMaterial(Long idChat, Long idMaterial, MaterialPatchDTO materialDto, Usuario usuario) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -286,10 +290,10 @@ public class ChatService {
     public void deleteMaterial(Long idChat, Long idMaterial, Usuario usuario) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -304,10 +308,10 @@ public class ChatService {
     public MeetingResponseDTO createMeeting(Long idChat, MeetingRequestDTO meetingDto, Usuario usuario) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -324,10 +328,10 @@ public class ChatService {
     public PagedResponse<MeetingResponseDTO> listMeetings(Long idChat, Usuario usuario, Pageable pageable) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -338,10 +342,10 @@ public class ChatService {
     public MeetingResponseDTO getMeeting(Long idChat, Long idMeeting, Usuario usuario) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -356,10 +360,10 @@ public class ChatService {
     public MeetingResponseDTO updateMeeting(Long idChat, Long idMeeting, MeetingPatchDTO meetingDto, Usuario usuario) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -379,10 +383,10 @@ public class ChatService {
     public void deleteMeeting(Long idChat, Long idMeeting, Usuario usuario) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -397,10 +401,10 @@ public class ChatService {
     public ExerciseResponseDTO createExercise(Long idChat, ExerciseRequestDTO exerciseDto, Usuario usuario) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -417,10 +421,10 @@ public class ChatService {
     public PagedResponse<ExerciseResponseDTO> listExercises(Long idChat, Usuario usuario, Pageable pageable) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -431,10 +435,10 @@ public class ChatService {
     public ExerciseResponseDTO getExercise(Long idChat, Long idExercise, Usuario usuario) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -449,10 +453,10 @@ public class ChatService {
     public ExerciseResponseDTO updateExercise(Long idChat, Long idExercise, ExercisePatchDTO exerciseDto, Usuario usuario) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -471,10 +475,10 @@ public class ChatService {
     public void deleteExercise(Long idChat, Long idExercise, Usuario usuario) {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
-        Student studentPossibleUser = studentRepository.findById(usuario.getId())
-                .orElse(null);
-        Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                Student studentPossibleUser = studentRepository.findById(usuario.getId())
+                        .orElse(new Student());
+                Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
+                        .orElse(new Teacher());
         if (!chat.containsStudent(studentPossibleUser) && !chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -511,7 +515,7 @@ public class ChatService {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + idChat));
         Teacher teacher = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                .orElse(new Teacher());
         if (!teacher.equals(chat.getTeacher())) {
             throw new AccessDeniedException("Access Denied");
         }
@@ -526,7 +530,7 @@ public class ChatService {
             double grade = answerDto.getGrade().get();
             answer.setGrade(grade);
             Student student = studentRepository.findById(answer.getStudent().getId())
-                .orElse(null);
+                .orElse(new Student());
             student.updateScore(grade*10 + 10);
             studentRepository.save(student);
         }
@@ -537,7 +541,7 @@ public class ChatService {
         Chat chat = chatRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Chat not found with ID: " + id));
         Teacher teacherPossibleUser = teacherRepository.findById(usuario.getId())
-                .orElse(null);
+                .orElse(new Teacher());
         if (!chat.getTeacher().equals(teacherPossibleUser)) {
             throw new AccessDeniedException("Access Denied");
         }
