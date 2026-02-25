@@ -2,6 +2,7 @@ package br.ifsp.virtual_studies.config;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.modelmapper.ModelMapper;
@@ -13,10 +14,11 @@ import br.ifsp.virtual_studies.dto.answer.AnswerResponseDTO;
 import br.ifsp.virtual_studies.dto.chat.ChatResponseDTO;
 import br.ifsp.virtual_studies.dto.exercise.ExerciseResponseDTO;
 import br.ifsp.virtual_studies.dto.material.MaterialResponseDTO;
+import br.ifsp.virtual_studies.dto.message.MessagePatchDTO;
 import br.ifsp.virtual_studies.dto.message.MessageResponseDTO;
 import br.ifsp.virtual_studies.dto.meeting.MeetingResponseDTO;
 import br.ifsp.virtual_studies.dto.thanks.ThanksResponseDTO;
-import br.ifsp.virtual_studies.dto.usuario.UsuarioRegistrationDTO;
+import br.ifsp.virtual_studies.dto.user.UserRegistrationDTO;
 import br.ifsp.virtual_studies.model.*;
 
 @Configuration
@@ -58,7 +60,7 @@ public class MapperConfig {
                 map().setStudentId(source.getStudent().getId());
             }
         });
-        modelMapper.addMappings(new PropertyMap<UsuarioRegistrationDTO, Student>() {
+        modelMapper.addMappings(new PropertyMap<UserRegistrationDTO, Student>() {
             
             @Override
             protected void configure() {
@@ -66,7 +68,7 @@ public class MapperConfig {
                 map().setRole(Role.STUDENT);
             }
         });
-        modelMapper.addMappings(new PropertyMap<UsuarioRegistrationDTO, Teacher>() {
+        modelMapper.addMappings(new PropertyMap<UserRegistrationDTO, Teacher>() {
             
             @Override
             protected void configure() {

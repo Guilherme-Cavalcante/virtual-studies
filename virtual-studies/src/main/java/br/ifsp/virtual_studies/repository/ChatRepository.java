@@ -5,8 +5,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.ifsp.virtual_studies.model.Chat;
+import br.ifsp.virtual_studies.model.Student;
 import br.ifsp.virtual_studies.model.Teacher;
+import br.ifsp.virtual_studies.model.User;
 
 public interface ChatRepository extends JpaRepository<Chat, Long> {
     Page<Chat> findByTeacher(Teacher teacher, Pageable pageable);
+    Page<Chat> findByStudentsContaining(Student student, Pageable pageable);
 }

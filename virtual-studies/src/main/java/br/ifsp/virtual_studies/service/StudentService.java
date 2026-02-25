@@ -15,10 +15,8 @@ import br.ifsp.virtual_studies.exceptions.ResourceNotFoundException;
 import br.ifsp.virtual_studies.mapper.PagedResponseMapper;
 import br.ifsp.virtual_studies.model.Student;
 import br.ifsp.virtual_studies.repository.StudentRepository;
-import jakarta.validation.Valid;
 
 @Service
-// @Validated
 public class StudentService {
     private final StudentRepository studentRepository;
     private final ModelMapper modelMapper;

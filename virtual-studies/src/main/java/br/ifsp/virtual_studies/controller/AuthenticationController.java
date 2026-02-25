@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.ifsp.virtual_studies.dto.authentication.AuthenticationDTO;
 import br.ifsp.virtual_studies.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
+@Tag(name = "Autentica;ão de Usuários")
 @RequestMapping("/api/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
@@ -18,6 +21,7 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
+    @Operation(summary = "Login")
     @PostMapping("authenticate")
     public String authenticate(@RequestBody AuthenticationDTO request) {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

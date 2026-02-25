@@ -1,4 +1,4 @@
-package br.ifsp.virtual_studies.dto.usuario;
+package br.ifsp.virtual_studies.dto.user;
 
 import br.ifsp.virtual_studies.model.Role;
 import jakarta.validation.constraints.Email;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioRegistrationDTO {
+public class UserRegistrationDTO {
 
     @NotNull(message = "Campo 'name' não pode ser nulo")
     @Size(min=2, max=100)

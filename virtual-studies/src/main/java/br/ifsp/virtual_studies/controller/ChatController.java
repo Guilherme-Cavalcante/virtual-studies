@@ -17,17 +17,22 @@ import org.springframework.web.bind.annotation.RestController;
 import br.ifsp.virtual_studies.dto.chat.*;
 import br.ifsp.virtual_studies.dto.exercise.*;
 import br.ifsp.virtual_studies.dto.material.*;
+import br.ifsp.virtual_studies.dto.meeting.MeetingRequestDTO;
+import br.ifsp.virtual_studies.dto.meeting.MeetingResponseDTO;
 import br.ifsp.virtual_studies.dto.message.*;
 import br.ifsp.virtual_studies.dto.answer.*;
 import br.ifsp.virtual_studies.dto.page.PagedResponse;
 import br.ifsp.virtual_studies.dto.student.*;
 import br.ifsp.virtual_studies.dto.thanks.*;
-import br.ifsp.virtual_studies.model.UsuarioAuthenticated;
+import br.ifsp.virtual_studies.model.UserAuthenticated;
 import br.ifsp.virtual_studies.service.ChatService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/chats")
+@Tag(name = "Chats", description = "Opera;ões relacionada à área de envio de materiais e mensagens")
 public class ChatController {
     private final ChatService chatService;
 
@@ -35,20 +40,22 @@ public class ChatController {
         this.chatService = chatService;
     }
 
+    @Operation(summary = "Criar novo chat")
     @PostMapping
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<ChatResponseDTO> createChat(@Valid @RequestBody ChatRequestDTO chat,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        ChatResponseDTO chatResponseDTO = chatService.createChat(chat, authentication.getUsuario());
+            @AuthenticationPrincipal UserAuthenticated authentication) {
+        ChatResponseDTO chatResponseDTO = chatService.createChat(chat, authentication.getUser());
         return ResponseEntity.status(HttpStatus.CREATED).body(chatResponseDTO);
     }
 
+    @Operation(summary = "Listar chats do professor")
     @GetMapping
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<PagedResponse<ChatResponseDTO>> listTeacherChats(
-            @AuthenticationPrincipal UsuarioAuthenticated authentication,
+            @AuthenticationPrincipal UserAuthenticated authentication,
             Pageable pageable) {
-        return ResponseEntity.ok(chatService.getTeacherChats(authentication.getUsuario(), pageable));
+        return ResponseEntity.ok(chatService.getTeacherChats(authentication.getUser(), pageable));
     }
 
     @GetMapping("/{id}")
@@ -56,6 +63,7 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getChatById(id));
     }
 
+    @Operation(summary = "Atualizar chat")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<ChatResponseDTO> updateChat(@PathVariable Long id,
@@ -64,149 +72,95 @@ public class ChatController {
         return ResponseEntity.ok(updatedChat);
     }
 
+    @Operation(summary = "Adicionar estudante ao chat ou remover um já existente")
     @PostMapping("/{idChat}/students/{idStudent}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<PagedResponse<StudentResponseDTO>> assignOrUnassignStudentToChat(@PathVariable Long idChat,
             @PathVariable Long idStudent,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication, Pageable pageable) {
+            @AuthenticationPrincipal UserAuthenticated authentication, Pageable pageable) {
         PagedResponse<StudentResponseDTO> chatStudents = chatService.assignOrUnassignStudent(idChat, idStudent,
-                authentication.getUsuario(), pageable);
+                authentication.getUser(), pageable);
         return ResponseEntity.ok(chatStudents);
     }
 
+    @Operation(summary = "Excluir chat")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Void> deleteChat(@PathVariable Long id,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        chatService.deleteChat(id, authentication.getUsuario());
+            @AuthenticationPrincipal UserAuthenticated authentication) {
+        chatService.deleteChat(id, authentication.getUser());
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Enviar mensagem ao chat")
     @PostMapping("/{idChat}/messages")
-    public ResponseEntity<PagedResponse<MessageResponseDTO>> createOrDeleteMessage(@PathVariable Long idChat,
+    public ResponseEntity<PagedResponse<MessageResponseDTO>> createMessage(@PathVariable Long idChat,
             @Valid @RequestBody MessageRequestDTO message,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication, Pageable pageable) {
-        PagedResponse<MessageResponseDTO> chatMessages = chatService.createOrDeleteMessage(idChat, message,
-                authentication.getUsuario(), pageable);
-        return ResponseEntity.ok(chatMessages);
+            @AuthenticationPrincipal UserAuthenticated authentication, Pageable pageable) {
+        PagedResponse<MessageResponseDTO> chatMessages = chatService.createMessage(idChat, message,
+                authentication.getUser(), pageable);
+        return ResponseEntity.status(HttpStatus.CREATED).body(chatMessages);
     }
 
+    @Operation(summary = "Listar mensagens do chat")
     @GetMapping("/{idChat}/messages")
     public ResponseEntity<PagedResponse<MessageResponseDTO>> listChatMessages(@PathVariable Long idChat,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication,
+            @AuthenticationPrincipal UserAuthenticated authentication,
             Pageable pageable) {
-        return ResponseEntity.ok(chatService.getMessages(idChat, authentication.getUsuario(), pageable));
+        return ResponseEntity.ok(chatService.getMessages(idChat, authentication.getUser(), pageable));
     }
 
-    @PutMapping("/{idChat}/messages/{idMessage}/thanks")
-    @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<MessageResponseDTO> thankOrUnthankMessage(@PathVariable Long idChat,
-            @PathVariable Long idMessage,
-            @Valid @RequestBody ThanksPatchDTO thanks,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        MessageResponseDTO updatedMessage = chatService.thankOrUnthankMessage(idChat, idMessage, thanks,
-                authentication.getUsuario());
-        return ResponseEntity.ok(updatedMessage);
-    }
-
+    @Operation(summary = "Enviar material")
     @PostMapping("/{idChat}/materials")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<MaterialResponseDTO> createMaterial(@PathVariable Long idChat,
             @Valid @RequestBody MaterialRequestDTO material,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        MaterialResponseDTO newMaterial = chatService.createMaterial(idChat, material, authentication.getUsuario());
-        return ResponseEntity.ok(newMaterial);
+            @AuthenticationPrincipal UserAuthenticated authentication) {
+        MaterialResponseDTO newMaterial = chatService.createMaterial(idChat, material, authentication.getUser());
+        return ResponseEntity.status(HttpStatus.CREATED).body(newMaterial);
     }
 
+    @Operation(summary = "Listar materiais")
     @GetMapping("/{idChat}/materials")
     public ResponseEntity<PagedResponse<MaterialResponseDTO>> listMaterials(@PathVariable Long idChat,
             Pageable pageable,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        return ResponseEntity.ok(chatService.listMaterials(idChat, authentication.getUsuario(), pageable));
+            @AuthenticationPrincipal UserAuthenticated authentication) {
+        return ResponseEntity.ok(chatService.listMaterials(idChat, authentication.getUser(), pageable));
     }
 
-    @GetMapping("/{idChat}/materials/{idMaterial}")
-    public ResponseEntity<MaterialResponseDTO> getMaterialById(@PathVariable Long idChat, @PathVariable Long idMaterial,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        MaterialResponseDTO newMaterial = chatService.getMaterial(idChat, idMaterial, authentication.getUsuario());
-        return ResponseEntity.ok(newMaterial);
-    }
-
-    @PutMapping("/{idChat}/materials/{idMaterial}")
-    @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<MaterialResponseDTO> updateMaterial(@PathVariable Long idChat, @PathVariable Long idMaterial,
-            @Valid @RequestBody MaterialPatchDTO material,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        MaterialResponseDTO newMaterial = chatService.updateMaterial(idChat, idMaterial, material,
-                authentication.getUsuario());
-        return ResponseEntity.ok(newMaterial);
-    }
-
-    @DeleteMapping("/{idChat}/materials/{idMaterial}")
-    @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<MaterialResponseDTO> deleteMaterial(@PathVariable Long idChat, @PathVariable Long idMaterial,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        chatService.deleteMaterial(idChat, idMaterial, authentication.getUsuario());
-        return ResponseEntity.noContent().build();
-    }
-
+    @Operation(summary = "Enviar exercício")
     @PostMapping("/{idChat}/exercises")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<ExerciseResponseDTO> createExercise(@PathVariable Long idChat,
             @Valid @RequestBody ExerciseRequestDTO exercise,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        ExerciseResponseDTO newExercise = chatService.createExercise(idChat, exercise, authentication.getUsuario());
-        return ResponseEntity.ok(newExercise);
+            @AuthenticationPrincipal UserAuthenticated authentication) {
+        ExerciseResponseDTO newExercise = chatService.createExercise(idChat, exercise, authentication.getUser());
+        return ResponseEntity.status(HttpStatus.CREATED).body(newExercise);
     }
 
+    @Operation(summary = "Listar exercícios")
     @GetMapping("/{idChat}/exercises")
     public ResponseEntity<PagedResponse<ExerciseResponseDTO>> listExercises(@PathVariable Long idChat,
             Pageable pageable,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        return ResponseEntity.ok(chatService.listExercises(idChat, authentication.getUsuario(), pageable));
+            @AuthenticationPrincipal UserAuthenticated authentication) {
+        return ResponseEntity.ok(chatService.listExercises(idChat, authentication.getUser(), pageable));
     }
 
-    @GetMapping("/{idChat}/exercises/{idExercise}")
-    public ResponseEntity<ExerciseResponseDTO> getExerciseById(@PathVariable Long idChat, @PathVariable Long idExercise,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        ExerciseResponseDTO newExercise = chatService.getExercise(idChat, idExercise, authentication.getUsuario());
-        return ResponseEntity.ok(newExercise);
-    }
-
-    @PutMapping("/{idChat}/exercises/{idExercise}")
+    @Operation(summary = "Marcar reunião")
+    @PostMapping("/{idChat}/meetings")
     @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<ExerciseResponseDTO> updateExercise(@PathVariable Long idChat, @PathVariable Long idExercise,
-            @Valid @RequestBody ExercisePatchDTO exercise,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        ExerciseResponseDTO newExercise = chatService.updateExercise(idChat, idExercise, exercise,
-                authentication.getUsuario());
-        return ResponseEntity.ok(newExercise);
+    public ResponseEntity<MeetingResponseDTO> createMeeting(@PathVariable Long idChat,
+            @Valid @RequestBody MeetingRequestDTO meeting,
+            @AuthenticationPrincipal UserAuthenticated authentication) {
+        MeetingResponseDTO newMeeting = chatService.createMeeting(idChat, meeting, authentication.getUser());
+        return ResponseEntity.status(HttpStatus.CREATED).body(newMeeting);
     }
 
-    @DeleteMapping("/{idChat}/exercises/{idExercise}")
-    @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<ExerciseResponseDTO> deleteExercise(@PathVariable Long idChat, @PathVariable Long idExercise,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        chatService.deleteExercise(idChat, idExercise, authentication.getUsuario());
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/{idChat}/exercises/{idExercise}/answers")
-    @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<AnswerResponseDTO> sendAnswer(@PathVariable Long idChat, @PathVariable Long idExercise,
-            @Valid @RequestBody AnswerRequestDTO answer,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        AnswerResponseDTO newAnswer = chatService.createAnswer(idChat, idExercise, answer, authentication.getUsuario());
-        return ResponseEntity.status(HttpStatus.CREATED).body(newAnswer);
-    }
-
-    @PutMapping("/{idChat}/exercises/{idExercise}/answers/{idAnswer}")
-    @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<AnswerResponseDTO> updateAnswer(@PathVariable Long idChat, @PathVariable Long idExercise,
-            @PathVariable Long idAnswer, @Valid @RequestBody AnswerPatchDTO answer,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        AnswerResponseDTO updatedAnswer = chatService.updateAnswer(idChat, idExercise, idAnswer, answer,
-                authentication.getUsuario());
-        return ResponseEntity.ok(updatedAnswer);
+    @Operation(summary = "Listar reuniões agendadas")
+    @GetMapping("/{idChat}/meetings")
+    public ResponseEntity<PagedResponse<MeetingResponseDTO>> listMeetings(@PathVariable Long idChat,
+            Pageable pageable,
+            @AuthenticationPrincipal UserAuthenticated authentication) {
+        return ResponseEntity.ok(chatService.listMeetings(idChat, authentication.getUser(), pageable));
     }
 }

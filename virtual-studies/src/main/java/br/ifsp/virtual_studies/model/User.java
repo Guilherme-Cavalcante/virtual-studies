@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,11 +29,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn //(name = "usuario_type")
-public abstract class Usuario implements Serializable {
+@DiscriminatorColumn //(name = "user_type")
+@Table(name = "Users")
+public abstract class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
@@ -53,7 +55,7 @@ public abstract class Usuario implements Serializable {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Role role;
+    protected Role role;
 
     private LocalDateTime createdAt;
 }

@@ -8,81 +8,68 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import br.ifsp.virtual_studies.dto.page.PagedResponse;
-import br.ifsp.virtual_studies.dto.thanks.ThanksRequestDTO;
-import br.ifsp.virtual_studies.dto.thanks.ThanksResponseDTO;
-import br.ifsp.virtual_studies.dto.message.MessageRequestDTO;
+import br.ifsp.virtual_studies.dto.message.MessagePatchDTO;
 import br.ifsp.virtual_studies.dto.message.MessageResponseDTO;
 import br.ifsp.virtual_studies.exceptions.ResourceNotFoundException;
 import br.ifsp.virtual_studies.mapper.PagedResponseMapper;
-import br.ifsp.virtual_studies.model.Chat;
 import br.ifsp.virtual_studies.model.Message;
-import br.ifsp.virtual_studies.model.Thanks;
-import br.ifsp.virtual_studies.model.Usuario;
-import br.ifsp.virtual_studies.repository.ChatRepository;
+import br.ifsp.virtual_studies.model.Student;
+import br.ifsp.virtual_studies.model.Teacher;
+import br.ifsp.virtual_studies.model.User;
 import br.ifsp.virtual_studies.repository.MessageRepository;
-import br.ifsp.virtual_studies.repository.UsuarioRepository;
+import br.ifsp.virtual_studies.repository.StudentRepository;
+import br.ifsp.virtual_studies.repository.TeacherRepository;
 
 @Service
 public class MessageService {
     private final MessageRepository messageRepository;
-    private final ChatRepository chatRepository;
-    private final UsuarioRepository usuarioRepository;
+    private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
     private final ModelMapper modelMapper;
-    private final PagedResponseMapper pagedResponseMapper;
-    
-    public MessageService(MessageRepository messageRepository, ChatRepository chatRepository, UsuarioRepository usuarioRepository, ModelMapper modelMapper, PagedResponseMapper pagedResponseMapper) {
+
+    public MessageService(MessageRepository messageRepository,
+            StudentRepository studentRepository, ModelMapper modelMapper,
+            TeacherRepository teacherRepository) {
         this.messageRepository = messageRepository;
-        this.chatRepository = chatRepository;
-        this.usuarioRepository = usuarioRepository;
+        this.studentRepository = studentRepository;
+        this.teacherRepository = teacherRepository;
         this.modelMapper = modelMapper;
-        this.pagedResponseMapper = pagedResponseMapper;
     }
-    
-    // public MessageResponseDTO createMessage(MessageRequestDTO messageDto) {
-    //     Chat chat = chatRepository.findById(messageDto.getChatId())
-    //             .orElseThrow(() -> new ResourceNotFoundException("Chat not found"));
-    //     Usuario author = usuarioRepository.findById(messageDto.getAuthorId())
-    //             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-    //     Message message = new Message();
-    //     message.setChat(chat);
-    //     message.setAuthor(author);
-    //     message.setText(messageDto.getText());
-    //     message.setCreatedAt(LocalDateTime.now());
-    //     Message createdMessage = messageRepository.save(message);
-    //     return modelMapper.map(createdMessage, MessageResponseDTO.class);
-    // }
-    
-    // public PagedResponse<MessageResponseDTO> getAllMessages(Pageable pageable) {
-    //     Page<Message> messagesPage = messageRepository.findAll(pageable);
-    //     return pagedResponseMapper.toPagedResponse(messagesPage, MessageResponseDTO.class);
-    // }
-    
-    public MessageResponseDTO getMessageById(Long id, Usuario usuario) {
+
+    public MessageResponseDTO getMessageById(Long id, User user) {
         Message message = messageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Message not found"));
-        if (!usuario.equals(message.getAuthor())) {
+        long idAuthor = message.getAuthor().getId();
+        Teacher teacher = teacherRepository.findById(idAuthor)
+                .orElse(new Teacher());
+        Student student = studentRepository.findById(idAuthor)
+                .orElse(new Student());
+        if (student.getId() == null && teacher.getId() == null) {
             throw new AccessDeniedException("Access Denied");
         }
         return modelMapper.map(message, MessageResponseDTO.class);
     }
-    
-    public MessageResponseDTO updateMessage(Long id, MessageRequestDTO messageDto, Usuario usuario) {
+
+    public MessageResponseDTO updateMessage(Long id, MessagePatchDTO messageDto, User user) {
         Message existingMessage = messageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Message not found with ID: " + id));
-        if (!usuario.equals(existingMessage.getAuthor())) {
+        long idAuthor = existingMessage.getAuthor().getId();
+        Teacher teacher = teacherRepository.findById(idAuthor)
+                .orElse(new Teacher());
+        Student student = studentRepository.findById(idAuthor)
+                .orElse(new Student());
+        if (student.getId() == null && teacher.getId() == null) {
             throw new AccessDeniedException("Access Denied");
         }
-        modelMapper.map(messageDto, existingMessage);
-        existingMessage.setId(id);
+        messageDto.getText().ifPresent(text -> existingMessage.setText(text));
         Message updatedMessage = messageRepository.save(existingMessage);
         return modelMapper.map(updatedMessage, MessageResponseDTO.class);
     }
-    
+
     public void deleteMessage(Long id) {
         Message message = messageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Message not found with ID: " + id));
-        
+
         messageRepository.delete(message);
     }
 }

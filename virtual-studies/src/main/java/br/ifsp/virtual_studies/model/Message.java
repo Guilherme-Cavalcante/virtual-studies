@@ -27,7 +27,7 @@ public class Message implements Serializable {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private Usuario author;
+    private User author;
 
     @NotBlank
     @Size(max=1000)

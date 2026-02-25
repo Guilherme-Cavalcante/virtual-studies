@@ -1,7 +1,7 @@
 package br.ifsp.virtual_studies.dto.message;
 
 import br.ifsp.virtual_studies.model.Chat;
-import br.ifsp.virtual_studies.model.Usuario;
+import br.ifsp.virtual_studies.model.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

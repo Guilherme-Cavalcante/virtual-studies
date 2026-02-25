@@ -8,5 +8,5 @@ import br.ifsp.virtual_studies.model.Chat;
 import br.ifsp.virtual_studies.model.Student;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    Page<Student> findAllByChatsContaining(Chat chat, Pageable pageable);
+    Page<Student> findByChatsContaining(Chat chat, Pageable pageable);
 }

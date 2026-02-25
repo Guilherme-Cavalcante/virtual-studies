@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ifsp.virtual_studies.dto.message.MessageResponseDTO;
+import br.ifsp.virtual_studies.dto.message.MessagePatchDTO;
 import br.ifsp.virtual_studies.dto.message.MessageRequestDTO;
-import br.ifsp.virtual_studies.model.UsuarioAuthenticated;
+import br.ifsp.virtual_studies.model.UserAuthenticated;
 import br.ifsp.virtual_studies.service.MessageService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
-@Deprecated
 @RestController
 @RequestMapping("/api/messages")
 public class MessageController {
@@ -30,31 +31,23 @@ public class MessageController {
         this.messageService = messageService;
     }
     
-    // @PostMapping
-    // public ResponseEntity<MessageResponseDTO> createMessage(@Valid @RequestBody MessageRequestDTO message) {
-    //     MessageResponseDTO messageResponseDTO = messageService.createMessage(message);
-    //     return ResponseEntity.status(HttpStatus.CREATED).body(messageResponseDTO);
-    // }
-    
-    // @GetMapping
-    // public ResponseEntity<PagedResponse<MessageResponseDTO>> getAllMessages(Pageable pageable) {
-    //     return ResponseEntity.ok(messageService.getAllMessages(pageable));
-    // }
-    
+    @Operation(summary = "Buscar mensagem")
     @GetMapping("/{id}")
     public ResponseEntity<MessageResponseDTO> getMessageById(@PathVariable Long id,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        return ResponseEntity.ok(messageService.getMessageById(id, authentication.getUsuario()));
+            @AuthenticationPrincipal UserAuthenticated authentication) {
+        return ResponseEntity.ok(messageService.getMessageById(id, authentication.getUser()));
     }
     
+    @Operation(summary = "Editar mensagem")
     @PutMapping("/{id}")
     public ResponseEntity<MessageResponseDTO> updateMessage(@PathVariable Long id,
-            @Valid @RequestBody MessageRequestDTO messageDto,
-            @AuthenticationPrincipal UsuarioAuthenticated authentication) {
-        MessageResponseDTO updatedMessage = messageService.updateMessage(id, messageDto, authentication.getUsuario());
+            @Valid @RequestBody MessagePatchDTO messageDto,
+            @AuthenticationPrincipal UserAuthenticated authentication) {
+        MessageResponseDTO updatedMessage = messageService.updateMessage(id, messageDto, authentication.getUser());
         return ResponseEntity.ok(updatedMessage);
     }
     
+    @Operation(summary = "Excluir mensagem")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMessage(@PathVariable Long id) {
         messageService.deleteMessage(id);

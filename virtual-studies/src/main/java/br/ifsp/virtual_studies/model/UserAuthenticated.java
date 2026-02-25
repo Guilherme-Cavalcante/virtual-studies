@@ -9,23 +9,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class UsuarioAuthenticated implements UserDetails {
+public class UserAuthenticated implements UserDetails {
 
-    private final Usuario usuario;
+    private final User user;
 
-    public UsuarioAuthenticated(Usuario usuario) {
-        this.usuario = usuario;
+    public UserAuthenticated(User user) {
+        this.user = user;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public User getUser() {
+        return user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> aroles = new ArrayList<>();
         List<Role> roles = new ArrayList<>();
-        roles.add(usuario.getRole());
+        roles.add(user.getRole());
         roles.add(Role.STUDENT);
         aroles = roles.stream()
                 .map(role -> (GrantedAuthority) () -> role.toString())
@@ -39,12 +39,12 @@ public class UsuarioAuthenticated implements UserDetails {
 
     @Override
     public String getPassword() {
-        return usuario.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return usuario.getName();
+        return user.getName();
     }
 
     @Override

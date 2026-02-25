@@ -1,15 +1,10 @@
 package br.ifsp.virtual_studies.dto.chat;
-
-import java.util.Set;
-
-import br.ifsp.virtual_studies.model.Student;
-import br.ifsp.virtual_studies.model.Teacher;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class ChatRequestDTO {
     
-    @NotNull(message = "Campo 'subject' não pode ser nulo")
+    @NotBlank(message = "Campo 'subject' não pode estar vazio")
     private String subject;
 }

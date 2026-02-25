@@ -1,61 +1,80 @@
-// package br.ifsp.virtual_studies.service;
+package br.ifsp.virtual_studies.service;
 
-// import org.modelmapper.ModelMapper;
-// import org.springframework.data.domain.Page;
-// import org.springframework.data.domain.Pageable;
-// import org.springframework.stereotype.Service;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
 
-// import br.ifsp.virtual_studies.dto.page.PagedResponse;
-// import br.ifsp.virtual_studies.dto.meeting.MeetingRequestDTO;
-// import br.ifsp.virtual_studies.dto.meeting.MeetingResponseDTO;
-// import br.ifsp.virtual_studies.exceptions.ResourceNotFoundException;
-// import br.ifsp.virtual_studies.mapper.PagedResponseMapper;
-// import br.ifsp.virtual_studies.model.Meeting;
-// import br.ifsp.virtual_studies.repository.MeetingRepository;
+import br.ifsp.virtual_studies.dto.meeting.MeetingPatchDTO;
+import br.ifsp.virtual_studies.dto.meeting.MeetingResponseDTO;
+import br.ifsp.virtual_studies.exceptions.ResourceNotFoundException;
+import br.ifsp.virtual_studies.model.Meeting;
+import br.ifsp.virtual_studies.model.Student;
+import br.ifsp.virtual_studies.model.Teacher;
+import br.ifsp.virtual_studies.model.User;
+import br.ifsp.virtual_studies.repository.ChatRepository;
+import br.ifsp.virtual_studies.repository.MeetingRepository;
+import br.ifsp.virtual_studies.repository.StudentRepository;
+import br.ifsp.virtual_studies.repository.TeacherRepository;
 
-// @Service
-// public class MeetingService {
-//     private final MeetingRepository meetingRepository;
-//     private final ModelMapper modelMapper;
-//     private final PagedResponseMapper pagedResponseMapper;
-    
-//     public MeetingService(MeetingRepository meetingRepository, ModelMapper modelMapper, PagedResponseMapper pagedResponseMapper) {
-//         this.meetingRepository = meetingRepository;
-//         this.modelMapper = modelMapper;
-//         this.pagedResponseMapper = pagedResponseMapper;
-//     }
-    
-//     public MeetingResponseDTO createMeeting(MeetingRequestDTO meetingDto) {
-//         Meeting meeting = modelMapper.map(meetingDto, Meeting.class);
-//         Meeting createdMeeting = meetingRepository.save(meeting);
-//         return modelMapper.map(createdMeeting, MeetingResponseDTO.class);
-//     }
-    
-//     public PagedResponse<MeetingResponseDTO> getAllMeetings(Pageable pageable) {
-//         Page<Meeting> meetingsPage = meetingRepository.findAll(pageable);
-//         return pagedResponseMapper.toPagedResponse(meetingsPage, MeetingResponseDTO.class);
-//     }
-    
-//     public MeetingResponseDTO getMeetingById(Long id) {
-//         Meeting meeting = meetingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Meeting not found"));
-//         return modelMapper.map(meeting, MeetingResponseDTO.class);
-//     }
-    
-//     public MeetingResponseDTO updateMeeting(Long id, MeetingRequestDTO meetingDto) {
-        
-//         Meeting existingMeeting = meetingRepository.findById(id)
-//                 .orElseThrow(() -> new ResourceNotFoundException("Meeting not found with ID: " + id));
-        
-//         modelMapper.map(meetingDto, existingMeeting);
-//         existingMeeting.setId(id);
-//         Meeting updatedMeeting = meetingRepository.save(existingMeeting);
-//         return modelMapper.map(updatedMeeting, MeetingResponseDTO.class);
-//     }
-    
-//     public void deleteMeeting(Long id) {
-//         Meeting meeting = meetingRepository.findById(id)
-//                 .orElseThrow(() -> new ResourceNotFoundException("Meeting not found with ID: " + id));
-        
-//         meetingRepository.delete(meeting);
-//     }
-// }
+@Service
+public class MeetingService {
+    private final MeetingRepository meetingRepository;
+    private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
+    private final ModelMapper modelMapper;
+
+    public MeetingService(MeetingRepository meetingRepository, ModelMapper modelMapper,
+            StudentRepository studentRepository, TeacherRepository teacherRepository) {
+        this.meetingRepository = meetingRepository;
+        this.studentRepository = studentRepository;
+        this.teacherRepository = teacherRepository;
+        this.modelMapper = modelMapper;
+    }
+
+    public MeetingResponseDTO getMeetingById(Long idMeeting, User user) {
+        Student studentPossibleUser = studentRepository.findById(user.getId())
+                .orElse(new Student());
+        Teacher teacherPossibleUser = teacherRepository.findById(user.getId())
+                .orElse(new Teacher());
+        if (studentPossibleUser.getId() == null && teacherPossibleUser.getId() == null) {
+            throw new AccessDeniedException("Access Denied");
+        }
+        Meeting meeting = meetingRepository.findById(idMeeting)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Meeting not found with ID: " + idMeeting));
+        return modelMapper.map(meeting, MeetingResponseDTO.class);
+    }
+
+    public MeetingResponseDTO updateMeeting(Long idMeeting,
+            MeetingPatchDTO meetingDto,
+            User user) {
+        Teacher teacherPossibleUser = teacherRepository.findById(user.getId())
+                .orElse(new Teacher());
+        if (teacherPossibleUser.getId() == null) {
+            throw new AccessDeniedException("Access Denied");
+        }
+        Meeting existingMeeting = meetingRepository.findById(idMeeting)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Meeting not found with ID: " + idMeeting));
+        if (meetingDto.getTitle().isPresent())
+            existingMeeting.setTitle(meetingDto.getTitle().get());
+        if (meetingDto.getDescription().isPresent())
+            existingMeeting.setDescription(meetingDto.getDescription().get());
+        if (meetingDto.getLink().isPresent())
+            existingMeeting.setLink(meetingDto.getLink().get());
+        Meeting updatedMeeting = meetingRepository.save(existingMeeting);
+        return modelMapper.map(updatedMeeting, MeetingResponseDTO.class);
+    }
+
+    public void deleteMeeting(Long idMeeting, User user) {
+        Teacher teacherPossibleUser = teacherRepository.findById(user.getId())
+                .orElse(new Teacher());
+        Meeting meeting = meetingRepository.findById(idMeeting)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Meeting not found with ID: " + idMeeting));
+        if (teacherPossibleUser.getId() == null) {
+            throw new AccessDeniedException("Access Denied");
+        }
+        meetingRepository.delete(meeting);
+    }
+}

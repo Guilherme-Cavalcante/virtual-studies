@@ -1,14 +1,10 @@
 package br.ifsp.virtual_studies.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,16 +14,25 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-public class Teacher extends Usuario {
+public class Teacher extends User {
 
     public Teacher() {
         super();
+        this.role = Role.TEACHER;
     }
 
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Chat> chats = new ArrayList<>();
+    private Set<Chat> chats = new HashSet<>();
 
-    public boolean containChat(Chat chat) {
+    public boolean containsChat(Chat chat) {
         return this.chats.contains(chat);
+    }
+
+    public void addChat(Chat chat) {
+        this.chats.add(chat);
+    }
+
+    public void removeChat(Chat chat) {
+        this.chats.remove(chat);
     }
 }

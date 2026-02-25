@@ -4,22 +4,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import br.ifsp.virtual_studies.exceptions.ResourceNotFoundException;
-import br.ifsp.virtual_studies.model.Usuario;
-import br.ifsp.virtual_studies.repository.UsuarioRepository;
+import br.ifsp.virtual_studies.model.User;
+import br.ifsp.virtual_studies.repository.UserRepository;
 
 @Service
 public class AuthenticationService {
     private final JwtService jwtService;
-    private final UsuarioRepository userRepository;
+    private final UserRepository userRepository;
     
-    public AuthenticationService(JwtService jwtService, UsuarioRepository userRepository) {
+    public AuthenticationService(JwtService jwtService, UserRepository userRepository) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
     }
     
     public String authenticate(Authentication authentication) {
         String username = authentication.getName();     
-        Usuario user = userRepository.findByName(username)
+        User user = userRepository.findByName(username)
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return jwtService.generateToken(user);
     }

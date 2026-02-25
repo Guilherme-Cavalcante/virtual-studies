@@ -18,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -32,7 +33,7 @@ public class Chat implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank
     @Size(min=3, max=120)
     private String subject;
 
@@ -41,8 +42,8 @@ public class Chat implements Serializable {
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     private Teacher teacher;
     
-    @ManyToMany(mappedBy = "chats")
-    private Set<Student> students;
+    @ManyToMany(mappedBy = "chats", cascade = CascadeType.ALL)
+    private Set<Student> students = new HashSet<>();
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Exercise> exercises = new ArrayList<>();

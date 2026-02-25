@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-import br.ifsp.virtual_studies.model.Usuario;
+import br.ifsp.virtual_studies.model.User;
 
 @Service
 public class JwtService {
@@ -16,7 +16,7 @@ public class JwtService {
         this.jwtEncoder = encoder;
     }
     
-    public String generateToken(Usuario user) {
+    public String generateToken(User user) {
         Instant now = Instant.now();
         long expire = 3600L;
     
