@@ -43,7 +43,12 @@ public class SecurityConfig {
             CustomJwtAuthenticationConverter customJwtAuthenticationConverter) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/users/register").permitAll().anyRequest().authenticated())
+                        .requestMatchers(
+                                "/api/users/register",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**")
+                        .permitAll().anyRequest().authenticated())
                 .oauth2ResourceServer(
                         conf -> conf.jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtAuthenticationConverter)))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

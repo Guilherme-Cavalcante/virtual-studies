@@ -23,10 +23,12 @@ import br.ifsp.virtual_studies.dto.page.PagedResponse;
 import br.ifsp.virtual_studies.model.UserAuthenticated;
 import br.ifsp.virtual_studies.service.MaterialService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/materials")
+@Tag(name = "Materials")
 public class MaterialController {
     private final MaterialService materialService;
 
@@ -34,14 +36,14 @@ public class MaterialController {
         this.materialService = materialService;
     }
 
-    @Operation(summary = "Buscar material")
+    @Operation(summary = "Fetch material")
     @GetMapping("/{id}")
     public ResponseEntity<MaterialResponseDTO> getMaterialById(@PathVariable Long id,
             @AuthenticationPrincipal UserAuthenticated authentication) {
         return ResponseEntity.ok(materialService.getMaterialById(id, authentication.getUser()));
     }
 
-    @Operation(summary = "Atualizar material")
+    @Operation(summary = "Update material")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<MaterialResponseDTO> updateMaterial(@PathVariable Long id,
@@ -51,7 +53,7 @@ public class MaterialController {
         return ResponseEntity.ok(updatedMaterial);
     }
 
-    @Operation(summary = "Excluir material")
+    @Operation(summary = "Delete material")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Void> deleteMaterial(@PathVariable Long id,

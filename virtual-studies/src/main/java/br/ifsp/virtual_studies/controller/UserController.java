@@ -19,10 +19,12 @@ import br.ifsp.virtual_studies.dto.user.UserResponseDTO;
 import br.ifsp.virtual_studies.model.UserAuthenticated;
 import br.ifsp.virtual_studies.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
+@Tag(name = "Users")
 public class UserController {
     private final UserService userService;
 
@@ -30,7 +32,7 @@ public class UserController {
         this.userService = userService;
     }
     
-    @Operation(summary = "Registrar usuário")
+    @Operation(summary = "Register user")
     @RequestMapping("/register")
     @PostMapping
     public ResponseEntity<UserResponseDTO> registerUser(@Valid @RequestBody UserRegistrationDTO user) {
@@ -39,7 +41,7 @@ public class UserController {
     }
 
     @RequestMapping("/{id}")
-    @PostMapping
+    @GetMapping
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         UserResponseDTO userResponseDTO = userService.getUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(userResponseDTO);

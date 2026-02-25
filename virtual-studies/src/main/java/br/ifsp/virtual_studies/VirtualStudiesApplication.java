@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 
-@OpenAPIDefinition(info = @Info(title = "Virtual Studies API", version = "1.0", description = "Documentação da API de Virtual Studies"))
+@OpenAPIDefinition(info = @Info(title = "Virtual Studies API", version = "1.0", description = "Documentation of VIrtual Studies API"))
 @SpringBootApplication
 public class VirtualStudiesApplication {
 

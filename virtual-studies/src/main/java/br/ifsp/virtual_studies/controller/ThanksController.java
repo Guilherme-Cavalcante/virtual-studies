@@ -24,10 +24,12 @@ import br.ifsp.virtual_studies.dto.message.MessageResponseDTO;
 import br.ifsp.virtual_studies.dto.page.PagedResponse;
 import br.ifsp.virtual_studies.service.ThanksService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/thanks")
+@Tag(name = "Thanks")
 public class ThanksController {
     private final ThanksService thanksService;
 
@@ -35,7 +37,7 @@ public class ThanksController {
         this.thanksService = thanksService;
     }
 
-    @Operation(summary = "Agradecer mensagem")
+    @Operation(summary = "Agradecer exercisem")
     @PostMapping("/{idMessage}")
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<MessageResponseDTO> thankOrUnthankMessage(@PathVariable Long idMessage,

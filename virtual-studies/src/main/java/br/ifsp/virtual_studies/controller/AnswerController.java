@@ -16,11 +16,13 @@ import br.ifsp.virtual_studies.dto.answer.AnswerResponseDTO;
 import br.ifsp.virtual_studies.dto.answer.AnswerRequestDTO;
 import br.ifsp.virtual_studies.dto.page.PagedResponse;
 import br.ifsp.virtual_studies.service.AnswerService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @Deprecated
 @RestController
 @RequestMapping("/api/answers")
+@Tag(name = "Answers")
 public class AnswerController {
     private final AnswerService answerService;
     

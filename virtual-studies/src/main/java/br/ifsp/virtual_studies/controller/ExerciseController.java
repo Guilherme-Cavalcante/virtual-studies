@@ -28,6 +28,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/exercises")
+@Tag(name = "Exercises")
 public class ExerciseController {
     private final ExerciseService exerciseService;
 
@@ -35,14 +36,14 @@ public class ExerciseController {
         this.exerciseService = exerciseService;
     }
 
-    @Operation(summary = "Buscar exercício")
+    @Operation(summary = "Fetch exercise")
     @GetMapping("/{id}")
     public ResponseEntity<ExerciseResponseDTO> getExerciseById(@PathVariable Long id,
             @AuthenticationPrincipal UserAuthenticated authentication) {
         return ResponseEntity.ok(exerciseService.getExerciseById(id, authentication.getUser()));
     }
 
-    @Operation(summary = "Atualizar exercício")
+    @Operation(summary = "Update exercise")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<ExerciseResponseDTO> updateExercise(@PathVariable Long id,
@@ -52,7 +53,7 @@ public class ExerciseController {
         return ResponseEntity.ok(updatedExercise);
     }
 
-    @Operation(summary = "Excluir exercício")
+    @Operation(summary = "Delete exercise")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Void> deleteExercise(@PathVariable Long id,

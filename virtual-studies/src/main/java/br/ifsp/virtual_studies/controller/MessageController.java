@@ -20,10 +20,12 @@ import br.ifsp.virtual_studies.dto.message.MessageRequestDTO;
 import br.ifsp.virtual_studies.model.UserAuthenticated;
 import br.ifsp.virtual_studies.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/messages")
+@Tag(name = "Messages")
 public class MessageController {
     private final MessageService messageService;
     
@@ -31,14 +33,14 @@ public class MessageController {
         this.messageService = messageService;
     }
     
-    @Operation(summary = "Buscar mensagem")
+    @Operation(summary = "Fetch message")
     @GetMapping("/{id}")
     public ResponseEntity<MessageResponseDTO> getMessageById(@PathVariable Long id,
             @AuthenticationPrincipal UserAuthenticated authentication) {
         return ResponseEntity.ok(messageService.getMessageById(id, authentication.getUser()));
     }
     
-    @Operation(summary = "Editar mensagem")
+    @Operation(summary = "Editar message")
     @PutMapping("/{id}")
     public ResponseEntity<MessageResponseDTO> updateMessage(@PathVariable Long id,
             @Valid @RequestBody MessagePatchDTO messageDto,
@@ -47,7 +49,7 @@ public class MessageController {
         return ResponseEntity.ok(updatedMessage);
     }
     
-    @Operation(summary = "Excluir mensagem")
+    @Operation(summary = "Delete message")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMessage(@PathVariable Long id) {
         messageService.deleteMessage(id);

@@ -1,0 +1,12 @@
+services:
+  virtual-studies:
+    build: ./virtual-studies
+    container_name: virtual-studies
+    ports:
+      - "8080:8080"
+
+  ms-gamification:
+    build: ./ms-gamification
+    container_name: ms-gamification
+    ports:
+      - "8081:8081"

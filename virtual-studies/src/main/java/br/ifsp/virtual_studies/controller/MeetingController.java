@@ -23,10 +23,12 @@ import br.ifsp.virtual_studies.dto.page.PagedResponse;
 import br.ifsp.virtual_studies.model.UserAuthenticated;
 import br.ifsp.virtual_studies.service.MeetingService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/meetings")
+@Tag(name = "Meetings")
 public class MeetingController {
     private final MeetingService meetingService;
 
@@ -34,14 +36,14 @@ public class MeetingController {
         this.meetingService = meetingService;
     }
 
-    @Operation(summary = "Buscar reunião")
+    @Operation(summary = "Fetch meeting")
     @GetMapping("/{id}")
     public ResponseEntity<MeetingResponseDTO> getMeetingById(@PathVariable Long id,
             @AuthenticationPrincipal UserAuthenticated authentication) {
         return ResponseEntity.ok(meetingService.getMeetingById(id, authentication.getUser()));
     }
 
-    @Operation(summary = "Atualizar reunião")
+    @Operation(summary = "Update meeting")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<MeetingResponseDTO> updateMeeting(@PathVariable Long id,
@@ -51,7 +53,7 @@ public class MeetingController {
         return ResponseEntity.ok(updatedMeeting);
     }
 
-    @Operation(summary = "Excluir reunião")
+    @Operation(summary = "Delete meeting")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Void> deleteMeeting(@PathVariable Long id,

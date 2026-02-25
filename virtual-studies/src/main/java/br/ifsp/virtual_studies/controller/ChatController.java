@@ -32,7 +32,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/chats")
-@Tag(name = "Chats", description = "Opera;ões relacionada à área de envio de materiais e mensagens")
+@Tag(name = "Chats", description = "Operations relationated with the materials, exercises and messages sending area")
 public class ChatController {
     private final ChatService chatService;
 
@@ -40,7 +40,7 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @Operation(summary = "Criar novo chat")
+    @Operation(summary = "Create new chat")
     @PostMapping
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<ChatResponseDTO> createChat(@Valid @RequestBody ChatRequestDTO chat,
@@ -49,7 +49,7 @@ public class ChatController {
         return ResponseEntity.status(HttpStatus.CREATED).body(chatResponseDTO);
     }
 
-    @Operation(summary = "Listar chats do professor")
+    @Operation(summary = "List teacher chats")
     @GetMapping
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<PagedResponse<ChatResponseDTO>> listTeacherChats(
@@ -63,7 +63,7 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getChatById(id));
     }
 
-    @Operation(summary = "Atualizar chat")
+    @Operation(summary = "Update chat")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<ChatResponseDTO> updateChat(@PathVariable Long id,
@@ -72,7 +72,7 @@ public class ChatController {
         return ResponseEntity.ok(updatedChat);
     }
 
-    @Operation(summary = "Adicionar estudante ao chat ou remover um já existente")
+    @Operation(summary = "Add student to the chat or remove an already added one")
     @PostMapping("/{idChat}/students/{idStudent}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<PagedResponse<StudentResponseDTO>> assignOrUnassignStudentToChat(@PathVariable Long idChat,
@@ -83,7 +83,7 @@ public class ChatController {
         return ResponseEntity.ok(chatStudents);
     }
 
-    @Operation(summary = "Excluir chat")
+    @Operation(summary = "Delete chat")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Void> deleteChat(@PathVariable Long id,
@@ -92,7 +92,7 @@ public class ChatController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Enviar mensagem ao chat")
+    @Operation(summary = "Send message to the chat")
     @PostMapping("/{idChat}/messages")
     public ResponseEntity<PagedResponse<MessageResponseDTO>> createMessage(@PathVariable Long idChat,
             @Valid @RequestBody MessageRequestDTO message,
@@ -102,7 +102,7 @@ public class ChatController {
         return ResponseEntity.status(HttpStatus.CREATED).body(chatMessages);
     }
 
-    @Operation(summary = "Listar mensagens do chat")
+    @Operation(summary = "List chat messages")
     @GetMapping("/{idChat}/messages")
     public ResponseEntity<PagedResponse<MessageResponseDTO>> listChatMessages(@PathVariable Long idChat,
             @AuthenticationPrincipal UserAuthenticated authentication,
@@ -110,7 +110,7 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getMessages(idChat, authentication.getUser(), pageable));
     }
 
-    @Operation(summary = "Enviar material")
+    @Operation(summary = "Send material")
     @PostMapping("/{idChat}/materials")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<MaterialResponseDTO> createMaterial(@PathVariable Long idChat,
@@ -120,7 +120,7 @@ public class ChatController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newMaterial);
     }
 
-    @Operation(summary = "Listar materiais")
+    @Operation(summary = "List materials")
     @GetMapping("/{idChat}/materials")
     public ResponseEntity<PagedResponse<MaterialResponseDTO>> listMaterials(@PathVariable Long idChat,
             Pageable pageable,
@@ -128,7 +128,7 @@ public class ChatController {
         return ResponseEntity.ok(chatService.listMaterials(idChat, authentication.getUser(), pageable));
     }
 
-    @Operation(summary = "Enviar exercício")
+    @Operation(summary = "Send exercise")
     @PostMapping("/{idChat}/exercises")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<ExerciseResponseDTO> createExercise(@PathVariable Long idChat,
@@ -138,7 +138,7 @@ public class ChatController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newExercise);
     }
 
-    @Operation(summary = "Listar exercícios")
+    @Operation(summary = "List exercises")
     @GetMapping("/{idChat}/exercises")
     public ResponseEntity<PagedResponse<ExerciseResponseDTO>> listExercises(@PathVariable Long idChat,
             Pageable pageable,
@@ -146,7 +146,7 @@ public class ChatController {
         return ResponseEntity.ok(chatService.listExercises(idChat, authentication.getUser(), pageable));
     }
 
-    @Operation(summary = "Marcar reunião")
+    @Operation(summary = "Schedule meeting")
     @PostMapping("/{idChat}/meetings")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<MeetingResponseDTO> createMeeting(@PathVariable Long idChat,
@@ -156,7 +156,7 @@ public class ChatController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newMeeting);
     }
 
-    @Operation(summary = "Listar reuniões agendadas")
+    @Operation(summary = "List scheduled meetings")
     @GetMapping("/{idChat}/meetings")
     public ResponseEntity<PagedResponse<MeetingResponseDTO>> listMeetings(@PathVariable Long idChat,
             Pageable pageable,

@@ -18,10 +18,12 @@ import br.ifsp.virtual_studies.dto.teacher.TeacherResponseDTO;
 import br.ifsp.virtual_studies.dto.teacher.TeacherRequestDTO;
 import br.ifsp.virtual_studies.dto.page.PagedResponse;
 import br.ifsp.virtual_studies.service.TeacherService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/teachers")
+@Tag(name = "Teachers")
 public class TeacherController {
     private final TeacherService teacherService;
     
